@@ -135,8 +135,8 @@ export default function HRAppointmentLetter() {
     setHrFields({
       date_of_joining: dojVal,
       cost_to_company: ctcVal,
-      location: "",
-      salary: emptySalary(),
+      location: decl.location || "",
+      salary: decl.salary || emptySalary(),
     });
     setSaveStatus("");
   };
@@ -152,6 +152,8 @@ export default function HRAppointmentLetter() {
         ...decl,
         cost_to_company: hrFields.cost_to_company,
         ctc_annual: hrFields.cost_to_company,
+        location: hrFields.location || "",
+        salary: hrFields.salary || emptySalary(),
       };
 
       await API.put(`/candidate/profile/${selectedApp.user_id}`, {

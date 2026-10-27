@@ -1,10 +1,7 @@
 import axios from "axios";
 
 // ─── Base API instance ───────────────────────────────────────────────────────
-const API_BASE_URL =
-    window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1"
-        ? "http://localhost:8000"
-        : "https://qvg1co5l50.execute-api.ap-southeast-2.amazonaws.com";
+const API_BASE_URL = "http://localhost:8000";
 
 const API = axios.create({
     baseURL: API_BASE_URL,

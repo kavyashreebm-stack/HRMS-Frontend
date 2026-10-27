@@ -1,5 +1,5 @@
 # ==============================================================================
-# Git Ignore - HRMS Project (Frontend & Backend)
+# Git Ignore - Hrapp (Frontend)
 # ==============================================================================
 
 # --- Node / Frontend Dependencies & Build ---
@@ -10,46 +10,21 @@ yarn-error.log*
 build/
 dist/
 
-# --- Python / Backend Virtual Environments & Caches ---
-venv/
-.venv/
-env/
-__pycache__/
-*.py[cod]
-*$py.class
-*.pytest_cache/
-.coverage
-htmlcov/
-
-# --- Environment Variables & Secrets (NEVER COMMIT) ---
+# --- Environment Variables & Secrets ---
 .env
 .env.local
 .env.*.local
 *.env
 !.env.example
-HR-Backend/.env
-
-# --- Local Uploaded Candidate Files & Media ---
-HR-Backend/uploads/*
-!HR-Backend/uploads/.gitkeep
-!HR-Backend/uploads/aadhar/.gitkeep
-!HR-Backend/uploads/pan/.gitkeep
-!HR-Backend/uploads/photos/.gitkeep
-!HR-Backend/uploads/resumes/.gitkeep
-!HR-Backend/uploads/sslc/.gitkeep
 
 # --- Deployment Archives & Zip Files ---
 *.zip
 *.tar.gz
 *.rar
-backend_deploy.zip
 frontend_build.zip
 
 # --- Log Files ---
 *.log
-HR-Backend/*.log
-requests.log
-backend.log
 
 # --- IDE & OS Cache Files ---
 .DS_Store
@@ -58,3 +33,4 @@ Thumbs.db
 .idea/
 *.sublime-project
 *.sublime-workspace
+

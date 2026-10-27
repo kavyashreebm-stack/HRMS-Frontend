@@ -79,7 +79,7 @@ export default function HROnboarding() {
 
     setHrFields({
       employee_id: cp.employee_id || "",
-      date_of_joining: cp.date_of_joining || "",
+      date_of_joining: formatDMY(cp.date_of_joining || ""),
       designation: cp.designation || "",
       basic: decl.basic || "",
       hra: decl.hra || "",
@@ -107,17 +107,21 @@ export default function HROnboarding() {
         designation,
         declaration: updatedDeclaration,
       });
-      setSaveStatus("Saved!");
+      const updatedCp = {
+        ...(selectedApp.candidate_profile || {}),
+        employee_id,
+        date_of_joining,
+        designation,
+        declaration: updatedDeclaration,
+      };
       setSelectedApp(prev => ({
         ...prev,
-        candidate_profile: {
-          ...prev.candidate_profile,
-          employee_id,
-          date_of_joining,
-          designation,
-          declaration: updatedDeclaration,
-        }
+        candidate_profile: updatedCp,
       }));
+      setApplications(prev =>
+        prev.map(a => (a.id === selectedApp.id ? { ...a, candidate_profile: updatedCp } : a))
+      );
+      setSaveStatus("Saved!");
       setTimeout(() => setSaveStatus(""), 2500);
     } catch (e) { setSaveStatus("Failed"); console.error(e); }
     finally { setIsSaving(false); }
@@ -398,18 +402,6 @@ export default function HROnboarding() {
 function Field({ label, k, type = "text", placeholder = "", hrFields, setHR }) {
   const isDateField = ["date_of_joining"].includes(k);
 
-  // --- Date of Joining: must not be a past date ---
-  const isPastDate = (() => {
-    if (k !== "date_of_joining") return false;
-    const val = hrFields[k] || "";
-    if (!isValidDate(val)) return false;
-    const parts = val.split("-"); // DD-MM-YYYY
-    const enteredDate = new Date(`${parts[2]}-${parts[1]}-${parts[0]}`);
-    const today = new Date();
-    today.setHours(0, 0, 0, 0);
-    return enteredDate < today;
-  })();
-
   return (
     <div>
       <label className="block text-[10px] font-bold text-gray-500 dark:text-gray-400 mb-1 uppercase tracking-wider">{label}</label>
@@ -433,16 +425,13 @@ function Field({ label, k, type = "text", placeholder = "", hrFields, setHR }) {
               else if (prevVal.endsWith("-") && val.length === prevVal.length - 1) val = val.slice(0, -1);
               setHR(k, val);
             }}
-            className={`w-full px-3 py-2 bg-white dark:bg-gray-700 border rounded-lg text-xs focus:outline-none focus:ring-2 transition text-gray-900 dark:text-white ${(hrFields[k] && !isValidDate(hrFields[k])) || isPastDate
+            className={`w-full px-3 py-2 bg-white dark:bg-gray-700 border rounded-lg text-xs focus:outline-none focus:ring-2 transition text-gray-900 dark:text-white ${hrFields[k] && !isValidDate(hrFields[k])
               ? "border-red-500 focus:ring-red-400"
               : "border-gray-200 dark:border-gray-600 focus:ring-blue-500"
               }`}
           />
           {hrFields[k] && !isValidDate(hrFields[k]) && (
             <p className="text-red-500 text-[10px] mt-0.5">Invalid date (use DD-MM-YYYY)</p>
-          )}
-          {isPastDate && (
-            <p className="text-red-500 text-[10px] mt-0.5">Date of Joining cannot be a past date</p>
           )}
         </div>
       ) : (

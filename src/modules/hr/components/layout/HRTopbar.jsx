@@ -113,7 +113,7 @@ export default function HRTopbar() {
           </div>
 
           {/* Name & Role */}
-          <div className="hidden md:block text-left">
+          <div className="hidden md:block text-left"> 
             <p className="text-sm font-semibold text-gray-800 dark:text-white leading-tight capitalize">
               {hrName}
             </p>
