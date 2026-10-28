@@ -20,7 +20,7 @@ A full-stack Human Resource Management System (HRMS) built with **React** (Tailw
 │   ├── api.js              # Central Axios API client
 │   └── index.js            # React application entrypoint
 ├── package.json            # Frontend npm dependencies and scripts
-├── webpack.config.js       # Webpack bundling configuration
+├── vite.config.js       # Webpack bundling configuration
 ├── tailwind.config.js      # Tailwind CSS configuration
 ├── .gitignore              # Git ignore rules
 │
