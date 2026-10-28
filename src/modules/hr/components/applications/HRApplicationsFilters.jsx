@@ -1,5 +1,5 @@
 import React from "react";
-import { FiSearch, FiFilter, FiGrid, FiList } from "react-icons/fi";
+import { Search, LayoutGrid, List } from "lucide-react";
 
 export default function HRApplicationsFilters({
   search,
@@ -20,7 +20,7 @@ export default function HRApplicationsFilters({
           {/* SEARCH */}
           <div className="relative w-[280px] md:w-[320px] shadow-sm rounded-lg">
 
-            <FiSearch className="absolute left-3 top-3 text-gray-400" />
+            <Search className="absolute left-3 top-3 text-gray-400 w-4 h-4" />
 
             <input
               type="text"
@@ -68,7 +68,7 @@ export default function HRApplicationsFilters({
               : "bg-white dark:bg-gray-750 border border-gray-200 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-600"
               }`}
           >
-            <FiGrid />
+            <LayoutGrid className="w-4 h-4" />
           </button>
 
           <button
@@ -78,7 +78,7 @@ export default function HRApplicationsFilters({
               : "bg-white dark:bg-gray-750 border border-gray-200 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-600"
               }`}
           >
-            <FiList />
+            <List className="w-4 h-4" />
           </button>
 
         </div>

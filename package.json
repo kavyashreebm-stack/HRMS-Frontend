@@ -6,8 +6,10 @@
     "node": ">=18.0.0"
   },
   "scripts": {
-    "start": "webpack serve --mode development",
-    "build": "webpack --mode production && node -e \"const fs = require('fs'); fs.rmSync('build', { recursive: true, force: true }); fs.cpSync('dist', 'build', { recursive: true });\""
+    "dev": "vite",
+    "start": "vite",
+    "build": "vite build && node -e \"const fs = require('fs'); fs.rmSync('build', { recursive: true, force: true }); fs.cpSync('dist', 'build', { recursive: true });\"",
+    "preview": "vite preview"
   },
   "keywords": [],
   "author": "",
@@ -16,38 +18,21 @@
   "dependencies": {
     "axios": "^1.14.0",
     "docx": "^9.6.0",
-    "dom-to-image-more": "^3.7.2",
     "file-saver": "^2.0.5",
     "framer-motion": "^12.38.0",
-    "html-to-image": "^1.11.13",
     "html2canvas": "^1.4.1",
     "jspdf": "^4.2.1",
     "lucide-react": "^0.574.0",
-    "motion-dom": "^12.38.0",
-    "motion-utils": "^12.36.0",
     "react": "^19.2.4",
     "react-countup": "^6.5.3",
-    "react-day-picker": "^9.13.2",
     "react-dom": "^19.2.4",
-    "react-icons": "^5.6.0",
     "react-router-dom": "^7.13.0"
   },
   "devDependencies": {
-    "@babel/core": "^7.29.0",
-    "@babel/preset-env": "^7.29.0",
-    "@babel/preset-react": "^7.28.5",
     "@tailwindcss/postcss": "^4.2.0",
-    "autoprefixer": "^10.4.24",
-    "babel-loader": "^10.0.0",
-    "css-loader": "^7.1.4",
-    "file-loader": "^6.2.0",
-    "html-webpack-plugin": "^5.6.6",
+    "@vitejs/plugin-react": "^4.3.4",
     "postcss": "^8.5.6",
-    "postcss-loader": "^8.2.1",
-    "style-loader": "^4.0.0",
     "tailwindcss": "^4.1.18",
-    "webpack": "^5.105.2",
-    "webpack-cli": "^6.0.1",
-    "webpack-dev-server": "^5.2.3"
+    "vite": "^6.2.0"
   }
 }
