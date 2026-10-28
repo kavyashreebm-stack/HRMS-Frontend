@@ -1,6 +1,7 @@
 # HRMS - HR Management & Candidate Onboarding System
 
-A full-stack Human Resource Management System (HRMS) built with **React** (Tailwind CSS, Lucide Icons, Webpack) and **FastAPI** (Python, SQLAlchemy, PostgreSQL, JWT Authentication).
+A full-stack Human Resource Management System (HRMS) built with **React** (Tailwind CSS, Lucide Icons, Vite
+) and **FastAPI** (Python, SQLAlchemy, PostgreSQL, JWT Authentication).
 
 ---
 
