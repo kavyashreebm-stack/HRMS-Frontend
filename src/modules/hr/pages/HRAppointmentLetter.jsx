@@ -691,7 +691,7 @@ function AppointmentLetterPage1({ cp = {}, app = {}, hrFields = {} }) {
           <div style={{ display: "flex", gap: "10px", marginBottom: "10px", fontSize: "15.5px", textAlign: "justify" }}>
             <div style={{ minWidth: "18px", flexShrink: 0 }}>3.</div>
             <div>
-              You will be on probation for a period of «{probationMonths}» months from the date of your joining. Your probationary period may be extended at the discretion of the Management which will also be communicated to you in writing. On the satisfactory completion to your period of probation and/ or any extended period thereafter, you may be confirmed in writing by the Management. If you are not confirmed in writing, you will be deemed to be continued on probation. During the period of probation or at the end of it, your services may be terminated without notice or compensation and without assigning any reason thereto.
+              You will be on probation for a period of six months from the date of your joining. Your probationary period may be extended at the discretion of the Management which will also be communicated to you in writing. On the satisfactory completion to your period of probation and/ or any extended period thereafter, you may be confirmed in writing by the Management. If you are not confirmed in writing, you will be deemed to be continued on probation. During the period of probation or at the end of it, your services may be terminated without notice or compensation and without assigning any reason thereto.
             </div>
           </div>
 
