@@ -86,13 +86,13 @@ export default function NewApplicationForm({
             const updated = { ...prev };
 
             // Always sync photo/resume from the profile if available
-            if (cleanPhotoPath) {
-              updated.photo = { name: "Profile Photo", url: `${FILE_BASE_URL}/${cleanPhotoPath}`, is_profile: true };
-              updated.photo_path = cleanPhotoPath;
+            if (photoUrl) {
+              updated.photo = { name: "Profile Photo", url: photoUrl, is_profile: true };
+              updated.photo_path = p.photo_path || photoUrl;
             }
-            if (cleanResumePath) {
-              updated.resume = { name: "Candidate Resume", url: `${FILE_BASE_URL}/${cleanResumePath}`, is_profile: true };
-              updated.resume_path = cleanResumePath;
+            if (resumeUrl) {
+              updated.resume = { name: "Candidate Resume", url: resumeUrl, is_profile: true };
+              updated.resume_path = p.resume_path || resumeUrl;
             }
 
             // Pre-populate other fields only if name (or whole form) is not yet initialized

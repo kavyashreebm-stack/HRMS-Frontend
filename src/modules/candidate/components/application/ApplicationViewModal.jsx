@@ -111,10 +111,8 @@ export default function ApplicationViewModal({ application, onClose }) {
       }
     }
 
-    // Fallback 2: Network fetch (trying multiple origins to match environment)
+    // Fallback: Network fetch
     const urlsToTry = [url];
-    if (url.includes("127.0.0.1")) urlsToTry.push(url.replace("127.0.0.1", "localhost"));
-    else if (url.includes("localhost")) urlsToTry.push(url.replace("localhost", "127.0.0.1"));
 
     for (const u of urlsToTry) {
       try {

@@ -88,6 +88,15 @@ export default function Declaration({
   const handleFileChange = async (field, file) => {
     if (!file) return;
 
+    // PDF-only validation
+    const ext = file.name.split(".").pop().toLowerCase();
+    if (file.type !== "application/pdf" && ext !== "pdf") {
+      alert("Invalid file type. Only PDF format is allowed for documents.");
+      const input = document.getElementById(`${field}Upload`);
+      if (input) input.value = "";
+      return;
+    }
+
     if (file.size > 2 * 1024 * 1024) {
       alert("File must be under 2MB");
       const input = document.getElementById(`${field}Upload`);
@@ -263,6 +272,7 @@ export default function Declaration({
                     type="file"
                     id="aadhaarUpload"
                     className="hidden"
+                    accept=".pdf"
                     disabled={readOnly}
                     onChange={(e) =>
                       handleFileChange("aadhaar", e.target.files[0])
@@ -278,7 +288,7 @@ export default function Declaration({
                     <span className="text-sm font-semibold text-[#0057B8] hover:underline">
                       Click to upload Aadhaar Card
                     </span>
-                    <span className="text-[10px] text-gray-400">Accepts PDF, JPG, PNG formats</span>
+                    <span className="text-[10px] text-gray-400">Accepts PDF format only</span>
                   </label>
                 </>
               )}
@@ -349,6 +359,7 @@ export default function Declaration({
                     type="file"
                     id="panUpload"
                     className="hidden"
+                    accept=".pdf"
                     disabled={readOnly}
                     onChange={(e) =>
                       handleFileChange("pan", e.target.files[0])
@@ -364,7 +375,7 @@ export default function Declaration({
                     <span className="text-sm font-semibold text-[#0057B8] hover:underline">
                       Click to upload PAN Card
                     </span>
-                    <span className="text-[10px] text-gray-400">Accepts PDF, JPG, PNG formats</span>
+                    <span className="text-[10px] text-gray-400">Accepts PDF format only</span>
                   </label>
                 </>
               )}
@@ -435,6 +446,7 @@ export default function Declaration({
                     type="file"
                     id="sslcUpload"
                     className="hidden"
+                    accept=".pdf"
                     disabled={readOnly}
                     onChange={(e) =>
                       handleFileChange("sslc", e.target.files[0])
@@ -450,7 +462,7 @@ export default function Declaration({
                     <span className="text-sm font-semibold text-[#0057B8] hover:underline">
                       Click to upload Marks Sheets
                     </span>
-                    <span className="text-[10px] text-gray-400">Accepts PDF, JPG, PNG formats</span>
+                    <span className="text-[10px] text-gray-400">Accepts PDF format only</span>
                   </label>
                 </>
               )}

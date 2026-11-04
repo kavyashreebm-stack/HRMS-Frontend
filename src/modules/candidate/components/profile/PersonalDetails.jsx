@@ -296,11 +296,11 @@ export default function PersonalDetails({
     const file = e.target.files[0];
     if (!file) return;
 
-    // Type validation: pdf, doc, docx
-    const allowedExtensions = ["pdf", "doc", "docx"];
+    // Type validation: pdf only
+    const allowedExtensions = ["pdf"];
     const ext = file.name.split(".").pop().toLowerCase();
     if (!allowedExtensions.includes(ext)) {
-      alert("Invalid file type. Only PDF, DOC, and DOCX resume formats are allowed.");
+      alert("Invalid file type. Only PDF resume format is allowed.");
       e.target.value = "";
       return;
     }
@@ -1192,7 +1192,7 @@ export default function PersonalDetails({
         <div ref={resumeRef} className="md:col-span-2" id="resume-upload-container">
           <label className="block text-sm font-medium mb-1">
             Resume <span className="text-red-500">*</span>{" "}
-            <span className="text-xs text-gray-400 font-normal">(PDF, DOC, DOCX only - 5MB Max)</span>
+            <span className="text-xs text-gray-400 font-normal">(PDF only - 5MB Max)</span>
           </label>
           <div
             tabIndex={readOnly ? -1 : 0}
@@ -1251,7 +1251,7 @@ export default function PersonalDetails({
               <>
                 <input
                   type="file"
-                  accept=".pdf,.doc,.docx"
+                  accept=".pdf"
                   id="resumeUpload"
                   className="hidden"
                   onChange={handleResumeUpload}
@@ -1267,7 +1267,7 @@ export default function PersonalDetails({
                   <span className="text-sm font-semibold text-[#0057B8] hover:underline">
                     Click to upload resume
                   </span>
-                  <span className="text-[10px] text-gray-400">Accepts PDF, DOC, DOCX formats</span>
+                  <span className="text-[10px] text-gray-400">Accepts PDF format only</span>
                 </label>
               </>
             )}

@@ -14,8 +14,8 @@ const getApiBaseUrl = () => {
     if (typeof process !== "undefined" && process.env?.REACT_APP_API_URL) {
         return process.env.REACT_APP_API_URL.replace(/\/+$/, "");
     }
-    // 4. Fallback to localhost for local development
-    return "http://localhost:8000";
+    // No fallback — VITE_API_URL must be set in your .env file
+    throw new Error("VITE_API_URL is not configured. Please set VITE_API_URL in your .env file.");
 };
 
 const API_BASE_URL = getApiBaseUrl();
