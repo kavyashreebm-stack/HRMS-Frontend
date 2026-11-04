@@ -2,7 +2,7 @@ import React, { useRef, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { X, Download, FileText } from "lucide-react";
 import jsPDF from "jspdf";
-import API, { FILE_BASE_URL } from "../../../../api";
+import API, { FILE_BASE_URL, getFileUrl } from "../../../../api";
 
 export default function ApplicationViewModal({ application, onClose }) {
   const formRef = useRef();
@@ -52,16 +52,24 @@ export default function ApplicationViewModal({ application, onClose }) {
     })),
 
     // Files
-    photoSrc: (application.photo_path || profile.photo_path)
-      ? ((application.photo_path || profile.photo_path).includes("://") || (application.photo_path || profile.photo_path).startsWith("data:") || (application.photo_path || profile.photo_path).startsWith("blob:")
-        ? (application.photo_path || profile.photo_path)
-        : `${FILE_BASE_URL}/${(application.photo_path || profile.photo_path).replace(/^uploads\//, "").replace(/^\/+/, "")}`)
-      : (application.photo?.url || application.photo?.data || profile.photo?.url || null),
-    resumeSrc: (application.resume_path || profile.resume_path)
-      ? ((application.resume_path || profile.resume_path).startsWith("blob:") || (application.resume_path || profile.resume_path).startsWith("data:") || (application.resume_path || profile.resume_path).startsWith("http")
-        ? (application.resume_path || profile.resume_path)
-        : `${FILE_BASE_URL}/${(application.resume_path || profile.resume_path).replace(/^uploads\//, "").replace(/^\/+/, "")}`)
-      : (application.resume?.url || profile.resume?.url || null),
+    photoSrc: getFileUrl(
+      application.photo_path ||
+      profile.photo_path ||
+      application.photo ||
+      profile.photo ||
+      application.photoUrl ||
+      profile.photoUrl ||
+      null
+    ) || null,
+    resumeSrc: getFileUrl(
+      application.resume_path ||
+      profile.resume_path ||
+      application.resume ||
+      profile.resume ||
+      application.resumeUrl ||
+      profile.resumeUrl ||
+      null
+    ) || null,
   };
 
   // Register number — use application.id directly (not normalizedApp.id, which gets overwritten
@@ -604,10 +612,20 @@ export default function ApplicationViewModal({ application, onClose }) {
                         src={normalizedApp.photoSrc}
                         alt="Candidate"
                         className="w-full h-full object-cover"
+                        onError={(e) => {
+                          e.target.style.display = "none";
+                          const fallback = e.target.parentElement?.querySelector(".photo-fallback");
+                          if (fallback) fallback.style.display = "block";
+                        }}
                       />
-                    ) : (
-                      <div className="text-[9px] text-gray-400 font-bold text-center p-2 uppercase">Paste Photograph Here</div>
-                    )}
+                    ) : null}
+                    <div
+                      className={`photo-fallback text-[9px] text-gray-400 font-bold text-center p-2 uppercase ${
+                        normalizedApp.photoSrc ? "hidden" : "block"
+                      }`}
+                    >
+                      Paste Photograph Here
+                    </div>
                   </div>
                 </div>
               </div>
@@ -723,15 +741,27 @@ export default function ApplicationViewModal({ application, onClose }) {
                   <tr className="border-t border-black">
                     <td className="p-1 border-r border-black">1</td>
                     <td className="p-1 border-r border-black text-left">Professional Resume / CV</td>
-                    <td className="p-1 border-r border-black text-left">{normalizedApp.resume?.name || (normalizedApp.resumeSrc ? "Resume Uploaded" : "No Resume")}</td>
+                    <td className="p-1 border-r border-black text-left">{normalizedApp.resume?.name || (normalizedApp.resumeSrc ? normalizedApp.resumeSrc.split("/").pop().split("?")[0] : "No Resume")}</td>
                     <td className="p-1">
                       {normalizedApp.resumeSrc ? (
-                        <button
-                          onClick={() => setShowResumePreview(true)}
-                          className="text-blue-600 font-bold hover:underline"
-                        >
-                          VIEW RESUME
-                        </button>
+                        <div className="flex items-center justify-center gap-1.5">
+                          <button
+                            type="button"
+                            onClick={() => setShowResumePreview(true)}
+                            className="text-blue-600 font-bold hover:underline uppercase text-[9px]"
+                          >
+                            VIEW RESUME
+                          </button>
+                          <a
+                            href={normalizedApp.resumeSrc}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-blue-600 hover:text-blue-800 text-[11px] font-bold"
+                            title="Open in new tab"
+                          >
+                            ↗
+                          </a>
+                        </div>
                       ) : (
                         <span className="text-gray-400">PENDING</span>
                       )}
@@ -758,25 +788,68 @@ export default function ApplicationViewModal({ application, onClose }) {
           </div>
         </motion.div>
         {showResumePreview && normalizedApp.resumeSrc && (
-          <div className="fixed inset-0 z-[9999] bg-black/70 flex items-center justify-center p-4">
-            <div className="bg-white rounded-xl shadow-2xl w-full max-w-6xl h-[90vh] flex flex-col overflow-hidden">
+          <div
+            className="fixed inset-0 z-[9999] bg-black/75 backdrop-blur-sm flex items-center justify-center p-4"
+            onClick={() => setShowResumePreview(false)}
+          >
+            <div
+              className="bg-white rounded-2xl shadow-2xl w-full max-w-6xl h-[90vh] flex flex-col overflow-hidden animate-in fade-in zoom-in duration-150"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className="flex justify-between items-center px-6 py-4 border-b bg-gray-50">
+                <div className="flex items-center gap-3">
+                  <FileText className="text-[#0057B8]" size={22} />
+                  <div>
+                    <h3 className="font-bold text-base text-gray-900">Resume Preview</h3>
+                    <p className="text-xs text-gray-500">
+                      {normalizedApp.resume?.name || normalizedApp.resumeSrc.split("/").pop().split("?")[0]}
+                    </p>
+                  </div>
+                </div>
 
-              <div className="flex justify-between items-center p-4 border-b">
-                <h3 className="font-bold text-lg">Resume Preview</h3>
-
-                <button
-                  onClick={() => setShowResumePreview(false)}
-                  className="p-2 hover:bg-gray-100 rounded"
-                >
-                  <X size={20} />
-                </button>
+                <div className="flex items-center gap-2">
+                  <a
+                    href={normalizedApp.resumeSrc}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold text-white bg-[#0057B8] hover:bg-blue-700 rounded-lg shadow-sm transition"
+                  >
+                    Open in New Tab ↗
+                  </a>
+                  <a
+                    href={normalizedApp.resumeSrc}
+                    download
+                    className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-lg transition"
+                  >
+                    <Download size={14} /> Download
+                  </a>
+                  <button
+                    onClick={() => setShowResumePreview(false)}
+                    className="p-1.5 hover:bg-gray-200 text-gray-500 rounded-lg transition ml-1"
+                  >
+                    <X size={20} />
+                  </button>
+                </div>
               </div>
 
-              <iframe
-                src={normalizedApp.resumeSrc}
-                title="Resume Preview"
-                className="w-full flex-1"
-              />
+              <div className="flex-1 bg-gray-100 relative flex flex-col">
+                <iframe
+                  src={normalizedApp.resumeSrc}
+                  title="Resume Preview"
+                  className="w-full flex-1 border-0"
+                />
+                <div className="bg-amber-50 border-t border-amber-200 px-4 py-2 text-xs text-amber-800 flex items-center justify-between">
+                  <span>If document preview does not load due to browser restrictions, click &quot;Open in New Tab&quot;.</span>
+                  <a
+                    href={normalizedApp.resumeSrc}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="font-bold underline hover:text-amber-900 ml-2"
+                  >
+                    Open in New Tab ↗
+                  </a>
+                </div>
+              </div>
             </div>
           </div>
         )}

@@ -1,6 +1,6 @@
 import React, { useState, useRef } from "react";
 import { Eye, X, GripVertical, CheckCircle2 } from "lucide-react";
-import { FILE_BASE_URL } from "../../../../api";
+import { FILE_BASE_URL, getFileUrl } from "../../../../api";
 
 export default function HRApplicationsCards({ app, onView, onDragStart, onDragEnd }) {
   const [showQuickCard, setShowQuickCard] = useState(false);
@@ -19,8 +19,8 @@ export default function HRApplicationsCards({ app, onView, onDragStart, onDragEn
   const onboardingClasses =
     "border-emerald-200 dark:border-emerald-800 hover:border-emerald-500 hover:shadow-emerald-100 dark:hover:shadow-emerald-950/20 hover:shadow-md hover:-translate-y-0.5";
 
-  const photoPath = app.candidate_profile?.photo_path;
-  const photoUrl = photoPath && !imageError ? `${FILE_BASE_URL}/${photoPath}` : null;
+  const photoPath = app.candidate_profile?.photo_path || app.photo_path || app.candidate_profile?.photo || app.photo;
+  const photoUrl = photoPath && !imageError ? getFileUrl(photoPath) : null;
   const initials = (app.candidate_profile?.name || "?").charAt(0).toUpperCase();
 
   const handleDragStart = (e) => {

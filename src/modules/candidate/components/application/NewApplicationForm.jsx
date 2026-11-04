@@ -3,7 +3,7 @@ import { Input, Select, Textarea } from "../ui/FormElements";
 import { Eye, FileText, Download, X, Plus, Trash2, ShieldCheck, Info, User, Edit2 } from "lucide-react";
 import { compressImage } from "../../../../shared/utils/imageUtils";
 import { formatDDMMYYYY, isValidDate, isToAfterFrom, parseDate, displayDateDDMMYYYY } from "../utils/dateHelpers";
-import { getCandidateOptions, getCandidateProfile, uploadFile, FILE_BASE_URL } from "../../../../api";
+import { getCandidateOptions, getCandidateProfile, uploadFile, FILE_BASE_URL, getFileUrl } from "../../../../api";
 
 const yesNoOptions = [
   { label: "Select", value: "" },
@@ -79,8 +79,8 @@ export default function NewApplicationForm({
         }
 
         if (p) {
-          const cleanPhotoPath = p.photo_path ? p.photo_path.replace(/^uploads\//, "") : "";
-          const cleanResumePath = p.resume_path ? p.resume_path.replace(/^uploads\//, "") : "";
+          const photoUrl = getFileUrl(p.photo_path || p.photo);
+          const resumeUrl = getFileUrl(p.resume_path || p.resume);
           console.log("PROFILE DATA:", p);
           setFormData(prev => {
             const updated = { ...prev };

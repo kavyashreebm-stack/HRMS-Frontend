@@ -1,14 +1,56 @@
 import axios from "axios";
 
 // ─── Base API instance ───────────────────────────────────────────────────────
-const API_BASE_URL = "http://localhost:8000";
+const getApiBaseUrl = () => {
+    // 1. Vite environment variable (standard in Vite production builds)
+    if (typeof import.meta !== "undefined" && import.meta.env?.VITE_API_URL) {
+        return import.meta.env.VITE_API_URL.replace(/\/+$/, "");
+    }
+    // 2. Window runtime config (for containerized deployments without rebuilding)
+    if (typeof window !== "undefined" && window.__ENV__?.VITE_API_URL) {
+        return window.__ENV__.VITE_API_URL.replace(/\/+$/, "");
+    }
+    // 3. Fallback to process.env (CRA / Webpack compatibility)
+    if (typeof process !== "undefined" && process.env?.REACT_APP_API_URL) {
+        return process.env.REACT_APP_API_URL.replace(/\/+$/, "");
+    }
+    // 4. Fallback to localhost for local development
+    return "http://localhost:8000";
+};
+
+const API_BASE_URL = getApiBaseUrl();
 
 const API = axios.create({
     baseURL: API_BASE_URL,
     timeout: 30000, // Increase timeout to 30 seconds for uploads
 });
 
-export const FILE_BASE_URL = `${API_BASE_URL}/uploads`;
+export const FILE_BASE_URL = (typeof import.meta !== "undefined" && import.meta.env?.VITE_FILE_BASE_URL)
+    ? import.meta.env.VITE_FILE_BASE_URL.replace(/\/+$/, "")
+    : `${API_BASE_URL}/uploads`;
+
+/**
+ * Universal helper to resolve any file/photo/resume/document reference into a fully qualified URL.
+ * Handles:
+ * - full external URLs (https://..., http://...)
+ * - data URLs (data:image/...)
+ * - blob URLs (blob:http://...)
+ * - objects with .url, .data, or .path properties
+ * - relative paths (photos/abc.jpg, /uploads/photos/abc.jpg, uploads/photos/abc.jpg)
+ */
+export const getFileUrl = (value) => {
+    if (!value) return "";
+    if (typeof value === "object") {
+        value = value.url || value.data || value.path || "";
+    }
+    if (!value || typeof value !== "string") return "";
+    const trimmed = value.trim();
+    if (trimmed.startsWith("http://") || trimmed.startsWith("https://") || trimmed.startsWith("data:") || trimmed.startsWith("blob:")) {
+        return trimmed;
+    }
+    const cleanPath = trimmed.replace(/^\/?uploads\//, "").replace(/^\/+/, "");
+    return `${FILE_BASE_URL}/${cleanPath}`;
+};
 
 // ─── Attach JWT token automatically to every request ────────────────────────
 API.interceptors.request.use((config) => {
